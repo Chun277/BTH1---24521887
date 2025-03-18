@@ -1,13 +1,15 @@
 #include <iostream>
 using namespace std;
-bool KiemTraNamNhuan(int nam)// ham kiem tra nam nhuan de biet nam do co phai nam nhuan hay khong
-{
-    if (nam % 4 == 0)
-    {
-        if (nam % 100 == 0)
-        {
-            if (nam % 400 == 0)
-            {
+
+/**
+ * Hàm kiểm tra năm nhuận
+ * Đầu vào: một số nguyên năm
+ * Đầu ra: true nếu là năm nhuận, false nếu không phải năm nhuận
+ */
+bool KiemTraNamNhuan(int nam) {
+    if (nam % 4 == 0) {
+        if (nam % 100 == 0) {
+            if (nam % 400 == 0) {
                 return true;
             }
             return false;
@@ -16,72 +18,71 @@ bool KiemTraNamNhuan(int nam)// ham kiem tra nam nhuan de biet nam do co phai na
     }
     return false;
 }
-int ngaytrongthang(int thang, int nam)// ham tinh thang nay co may ngay
-{
-     int ngay;
-     switch (thang)
-    {
-        case 1:
-        case 3:
-        case 5:
-        case 7:
-        case 8:
-        case 10:
-        case 12:
+
+/**
+ * Hàm xác định số ngày trong một tháng của một năm
+ * Đầu vào: tháng và năm
+ * Đầu ra: số ngày của tháng đó
+ */
+int ngaytrongthang(int thang, int nam) {
+    int ngay;
+    switch (thang) {
+        case 1: case 3: case 5: case 7: case 8: case 10: case 12:
             ngay = 31;
             break;
-        case 4:
-        case 6:
-        case 9:
-        case 11:
+        case 4: case 6: case 9: case 11:
             ngay = 30;
             break;
         case 2:
-            if (KiemTraNamNhuan(nam))
-            {
-                ngay = 29;
-            }
-            else
-            {
-                ngay = 28;
-            }
+            ngay = KiemTraNamNhuan(nam) ? 29 : 28;
             break;
         default:
-            cout << "Thang khong hop le. Vui long nhap thang trong khoang tư 1 den 12 !" << endl;
-            return 1;
+            cout << "Thang khong hop le. Vui long nhap thang trong khoang tu 1 den 12!" << endl;
+            return -1;
     }
     return ngay;
 }
-void ngayketiep(int &ngay, int &thang, int &nam)// ham tim ngay ke tiep 
-{
+
+/**
+ * Hàm tìm ngày kế tiếp của một ngày cho trước
+ * Đầu vào: tham chiếu đến ngày, tháng, năm
+ * Đầu ra: cập nhật ngày, tháng, năm thành ngày kế tiếp
+ */
+void ngayketiep(int &ngay, int &thang, int &nam) {
     ngay++;
-    if (ngay > ngaytrongthang(thang, nam))
-    {
+    if (ngay > ngaytrongthang(thang, nam)) {
         ngay = 1;
         thang++;
-        if (thang > 12)
-        {
+        if (thang > 12) {
             thang = 1;
             nam++;
         }
     }
 }
-void ngaytruocdo(int &ngay, int &thang, int &nam)// ham tim ngay truoc do
-{
+
+/**
+ * Hàm tìm ngày trước đó của một ngày cho trước
+ * Đầu vào: tham chiếu đến ngày, tháng, năm
+ * Đầu ra: cập nhật ngày, tháng, năm thành ngày trước đó
+ */
+void ngaytruocdo(int &ngay, int &thang, int &nam) {
     ngay--;
-    if (ngay == 0)
-    {
+    if (ngay == 0) {
         thang--;
-        if (thang == 0)
-        {
+        if (thang == 0) {
             thang = 12;
             nam--;
         }
         ngay = ngaytrongthang(thang, nam);
     }
 }
-int ngaythumaytrongnam(int ngay, int thang, int nam)// ham tinh ngay nay la ngay thu bao nhieu trong nam
-{
+
+/**
+ * Hàm tính ngày hiện tại là ngày thứ bao nhiêu trong năm
+ * Đầu vào: ngày, tháng, năm
+ * Đầu ra: vị trí thứ tự của ngày trong năm
+ */
+int ngaythumaytrongnam(int ngay, int thang, int nam) {
     int tongngay = 0;
     for (int i = 1; i < thang; i++) {
         tongngay += ngaytrongthang(i, nam);
@@ -89,22 +90,38 @@ int ngaythumaytrongnam(int ngay, int thang, int nam)// ham tinh ngay nay la ngay
     tongngay += ngay;
     return tongngay;
 }
-int main()
-{
+
+/**
+ * Hàm main - Chương trình chính
+ * Nhập vào ngày, tháng, năm, sau đó tính:
+ * - Ngày kế tiếp
+ * - Ngày trước đó
+ * - Ngày này là ngày thứ bao nhiêu trong năm
+ */
+int main() {
     int ngay, thang, nam;
     cout << "Nhap ngay, thang, nam: ";
     cin >> ngay >> thang >> nam;
-    if (thang < 1 || thang > 12 || ngay < 1 || ngay > ngaytrongthang(thang, nam))
-    {
+
+    // Kiểm tra tính hợp lệ của ngày nhập vào
+    if (thang < 1 || thang > 12 || ngay < 1 || ngay > ngaytrongthang(thang, nam)) {
         cout << "Nhap ngay thang nam khong hop le, vui long nhap lai.\n";
         return 1;
     }
+
+    // Xác định ngày kế tiếp
     int ngayke = ngay, thangke = thang, namke = nam;
     ngayketiep(ngayke, thangke, namke);
     cout << "Ngay ke tiep: " << ngayke << "/" << thangke << "/" << namke << endl;
+
+    // Xác định ngày trước đó
     int ngaytruoc = ngay, thangtruoc = thang, namtruoc = nam;
     ngaytruocdo(ngaytruoc, thangtruoc, namtruoc);
-    cout << "Ngay truoc do: " << ngaytruoc << "/" << thangtruoc<< "/" << namtruoc << endl;
-    cout << "Ngay " << ngay << "/" << thang << "/" << nam << " la ngay thu " << ngaythumaytrongnam(ngay, thang, nam) << " trong nam\n";
+    cout << "Ngay truoc do: " << ngaytruoc << "/" << thangtruoc << "/" << namtruoc << endl;
+
+    // Tính ngày thứ bao nhiêu trong năm
+    cout << "Ngay " << ngay << "/" << thang << "/" << nam << " la ngay thu "
+         << ngaythumaytrongnam(ngay, thang, nam) << " trong nam\n";
+
     return 0;
 }
