@@ -2,37 +2,57 @@
 #include <cmath>
 #define PI 3.141592653589793
 using namespace std;
-double tinhgiaithua(int n)// ham tinh giai thua cua 1 so 
-{
+
+/**
+ * Hàm tính giai thừa của một số nguyên dương n (n!)
+ * Đầu vào: một số nguyên n
+ * Đầu ra: giai thừa của n
+ */
+double tinhgiaithua(int n) {
     double giaithua = 1;
-    for (int i = 1; i <= n; i++)
-    {
+    for (int i = 1; i <= n; i++) {
         giaithua *= i;
     }
     return giaithua;
 }
-double tinhsinx(double x)// ham tinh sin x theo cong thuc de bai cho
-{
+
+/**
+ * Hàm tính giá trị của sin(x) theo chuỗi Taylor:
+ * sin(x) = x - x^3/3! + x^5/5! - x^7/7! + ...
+ * Đầu vào: x (góc tính theo radian)
+ * Đầu ra: giá trị gần đúng của sin(x)
+ */
+double tinhsinx(double x) {
+    // Chuẩn hóa giá trị x vào khoảng [-π, π] để tăng độ chính xác tính toán
     x = fmod(x, 2 * PI);
     if (x > PI) x -= 2 * PI;
     if (x < -PI) x += 2 * PI;
-    double tong = 0;
-    double tam = x;
-    int n = 0;
-    do
-    {
+
+    double tong = 0; // Tổng của chuỗi Taylor
+    double tam = x;  // Giá trị của từng số hạng trong chuỗi
+    int n = 0;       // Chỉ số của số hạng trong chuỗi Taylor
+
+    do {
         tam = pow(-1, n) * pow(x, 2 * n + 1) / tinhgiaithua(2 * n + 1);
         tong += tam;
         n++;
-    }
-    while (fabs(tam) >= 0.00001);
+    } while (fabs(tam) >= 0.00001); // Dừng khi giá trị số hạng nhỏ hơn sai số cho phép
+
     return tong;
 }
-int main()
-{
+
+/**
+ * Hàm main - Chương trình chính
+ * Nhập giá trị x từ bàn phím, tính sin(x) và in kết quả ra màn hình
+ */
+int main() {
     double x;
+    cout << "Nhap x (radian): ";
     cin >> x;
+
     double ketqua = tinhsinx(x);
     cout << "Sin(" << x << ") = " << ketqua << endl;
+
     return 0;
 }
+
