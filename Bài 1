@@ -1,70 +1,91 @@
 #include <iostream>
 using namespace std;
-struct PHANSO {
-    int ts, ms;
+
+struct PHANSO 
+{
+    int ts, ms; // Tử số và mẫu số của phân số
 };
-int TimUSCLN(int a, int b) { // ham tim uoc so chung lon nhat
-    a = a < 0 ? -a : a;
-    b = b < 0 ? -b : b;
+
+/**
+ * Hàm tìm ước số chung lớn nhất (USCLN) của hai số nguyên
+ * Đầu vào: hai số nguyên a, b
+ * Đầu ra: USCLN của a và b
+ */
+int TimUSCLN(int a, int b) {
+    a = a < 0 ? -a : a; // Chuyển a về giá trị dương
+    b = b < 0 ? -b : b; // Chuyển b về giá trị dương
     if (a == 0 || b == 0)
-        return a + b;
+        return a + b; // Nếu một trong hai số bằng 0, USCLN là số còn lại
     while (a != b) {
         if (a > b)
-            a -= b;
+            a -= b; // Giảm dần để tìm USCLN
         else
             b -= a;
     }
     return b;
 }
-void RutGon(PHANSO &ps) { // ham rut gon phan so bang cach chia ca tu va mau cho uoc so chung lon nhat cua tu va mau
+
+/**
+ * Hàm rút gọn phân số bằng cách chia cả tử số và mẫu số cho USCLN
+ * Đầu vào: một phân số
+ * Đầu ra: phân số sau khi rút gọn
+ */
+void RutGon(PHANSO &ps) {
     int USCLN = TimUSCLN(ps.ts, ps.ms);
     if (USCLN > 0) {
         ps.ts /= USCLN;
         ps.ms /= USCLN;
     }
+    // Đảm bảo mẫu số luôn dương
     if (ps.ms < 0) {
         ps.ts = -ps.ts;
         ps.ms = -ps.ms;
     }
 }
-void NhapPhanSo(PHANSO &ps) // ham nhap phan so
-{
+
+/**
+ * Hàm nhập thông tin cho một phân số từ bàn phím
+ * Đầu vào: phân số cần nhập
+ * Đầu ra: giá trị của phân số được nhập
+ */
+void NhapPhanSo(PHANSO &ps) {
     cout << "Nhap tu so: ";
     cin >> ps.ts;
     do {
-        cout << "Nhap mau so: ";
+        cout << "Nhap mau so (khac 0): ";
         cin >> ps.ms;
-    } while (ps.ms == 0);
+    } while (ps.ms == 0); // Kiểm tra tránh nhập mẫu số bằng 0
 }
-void XuatPhanSo(PHANSO ps) // ham xuat phan so
-{
-    RutGon(ps);
-    if (ps.ms < 0)
-    {
-        cout << -ps.ts << "/" << -ps.ms;
+
+/**
+ * Hàm xuất phân số ra màn hình theo dạng tối giản
+ * Đầu vào: một phân số đã rút gọn
+ * Đầu ra: hiển thị phân số dưới dạng tử/mẫu
+ */
+void XuatPhanSo(PHANSO ps) {
+    RutGon(ps); // Đảm bảo phân số được rút gọn trước khi xuất
+
+    if (ps.ms == 1) {
+        cout << ps.ts; // Nếu mẫu số là 1, chỉ in tử số
     }
-    else if (ps.ms == -1)
-    {
-        cout << -ps.ts;
+    else if (ps.ms == -1) {
+        cout << -ps.ts; // Nếu mẫu số là -1, chỉ in tử số âm
     }
-    else if (ps.ms == 0)
-    {
-        cout << "Khong Xac Dinh";
+    else if (ps.ms == 0) {
+        cout << "Khong Xac Dinh"; // Tránh lỗi chia cho 0 (trường hợp không hợp lệ)
     }
-    else if (ps.ms == 1)
-    {
-        cout << ps.ts;
-    }
-    else
-    {
-        cout << ps.ts << "/" << ps.ms;
+    else {
+        cout << ps.ts << "/" << ps.ms; // In phân số dạng tử/mẫu
     }
 }
-int main()
-{
+
+/**
+ * Hàm chính của chương trình, thực hiện nhập, rút gọn và xuất phân số
+ */
+int main() {
     PHANSO ps;
-    NhapPhanSo(ps);
-    RutGon(ps);
-    XuatPhanSo(ps);
+    NhapPhanSo(ps); // Nhập phân số từ người dùng
+    RutGon(ps);     // Rút gọn phân số
+    XuatPhanSo(ps); // Xuất phân số ra màn hình
     return 0;
 }
