@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+bool KiemTraDayCon(const vector<int>& A, const vector<int>& B, int vitribatdau) 
+// ham kiem tra day A co phai day con cua B khong                                                                           
+{
+    for (int i = 0; i < A.size(); i++)
+    {
+        if (vitribatdau + i >= B.size() || A[i] != B[vitribatdau + i]) 
+        {                                                              
+            return false;
+        }
+    }
+    return true;
+}
+vector<int> DemSoLanXuatHien(const vector<int>& A, const vector<int>& B)
+// ham dem so lan A xuat hien trong B
+{
+    vector<int> ViTriXuatHien;
+    if (A.empty() || B.empty()) return ViTriXuatHien;
+    if (A.size() > B.size()) return ViTriXuatHien;
+    for (int i = 0; i <= B.size() - A.size(); i++)
+    {
+        if (KiemTraDayCon(A, B, i))
+        {
+            ViTriXuatHien.push_back(i);
+        }
+    }
+    return ViTriXuatHien;
+}
+int main()
+{
+    int SoPhanTuA, SoPhanTuB;
+    cout << "Nhap so phan tu cua mang A va B: ";
+    cin >> SoPhanTuA >> SoPhanTuB;
+    vector<int> A(SoPhanTuA), B(SoPhanTuB);
+    cout << "Nhap mang A: ";
+    for (int i = 0; i < SoPhanTuA; i++) cin >> A[i];
+    cout << "Nhap mang B: ";
+    for (int i = 0; i < SoPhanTuB; i++) cin >> B[i];
+    vector<int> KetQua = DemSoLanXuatHien(A, B);
+    cout << "So lan mang A xuat hien trong B: " << KetQua.size() << endl;
+    if (!KetQua.empty())
+    {
+        cout << "Vi tri bat dau cua cac lan xuat hien: ";
+        for (int ViTri : KetQua)
+        {
+            cout << ViTri << " ";
+        }
+        cout << endl;
+    }
+    return 0;
+}
