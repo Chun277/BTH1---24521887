@@ -1,0 +1,117 @@
+#include <iostream>
+using namespace std;
+struct PHANSO {
+    int ts, ms;
+};
+int TimUSCLN(int a, int b) { // ham tim uoc so chung lon nhat
+    a = a < 0 ? -a : a;
+    b = b < 0 ? -b : b;
+    if (a == 0 || b == 0)
+        return a + b;
+    while (a != b) {
+        if (a > b)
+            a -= b;
+        else
+            b -= a;
+    }
+    return b;
+}
+void RutGon(PHANSO &ps) // ham rut gon phan so
+{
+    int USCLN = TimUSCLN(ps.ts, ps.ms);
+    if (USCLN > 0) {
+        ps.ts /= USCLN;
+        ps.ms /= USCLN;
+    }
+    if (ps.ms < 0) {
+        ps.ts = -ps.ts;
+        ps.ms = -ps.ms;
+    }
+}
+void NhapPhanSo(PHANSO &ps) // ham nhap phan so
+{
+    cout << "Nhap tu so: ";
+    cin >> ps.ts;
+    do {
+        cout << "Nhap mau so: ";
+        cin >> ps.ms;
+    } while (ps.ms == 0);
+}
+void XuatPhanSo(PHANSO ps) // ham xuat  phan so
+{
+    RutGon(ps);
+    if (ps.ms < 0)
+    {
+        cout << -ps.ts << "/" << -ps.ms;
+    }
+    else if (ps.ms == -1)
+    {
+        cout << -ps.ts;
+    }
+    else if (ps.ms == 0)
+    {
+        cout << "Khong Xac Dinh";
+    }
+    else if (ps.ms == 1)
+    {
+        cout << ps.ts;
+    }
+    else
+    {
+        cout << ps.ts << "/" << ps.ms;
+    }
+}
+
+PHANSO Cong(PHANSO ps1, PHANSO ps2)// ham tinh tong 2 phan so
+{
+    PHANSO pstong;
+    pstong.ts = ps1.ts * ps2.ms + ps1.ms * ps2.ts;
+    pstong.ms = ps1.ms * ps2.ms;
+    return pstong;
+}
+PHANSO Tru(PHANSO ps1, PHANSO ps2)//ham tinh hieu 2 phan so
+{
+    PHANSO pshieu;
+    pshieu.ts = ps1.ts * ps2.ms - ps1.ms * ps2.ts;
+    pshieu.ms = ps1.ms * ps2.ms;
+    return pshieu;
+}
+PHANSO Nhan(PHANSO ps1, PHANSO ps2)// ham tinh tich 2 phan so
+{
+    PHANSO pstich;
+    pstich.ts = ps1.ts * ps2.ts;
+    pstich.ms = ps1.ms * ps2.ms;
+    return pstich;
+}
+PHANSO Chia(PHANSO ps1, PHANSO ps2)// ham tinh thuong 2 phan so
+{
+    PHANSO psthuong;
+    psthuong.ts = ps1.ts * ps2.ms;
+    psthuong.ms = ps1.ms * ps2.ts;
+    return psthuong;
+}
+int main()
+{
+    PHANSO ps1, ps2;
+    cout << "Nhap phan so 1: " << endl;
+    NhapPhanSo(ps1);
+    cout << "Nhap phan so 2: " << endl;
+    NhapPhanSo(ps2);
+    PHANSO pstong = Cong(ps1, ps2);
+    cout << "Tong: ";
+    XuatPhanSo(pstong);
+    cout << endl;
+    PHANSO pshieu = Tru(ps1, ps2);
+    cout << "Hieu: ";
+    XuatPhanSo(pshieu);
+    cout << endl;
+    PHANSO pstich = Nhan(ps1, ps2);
+    cout << "Tich: ";
+    XuatPhanSo(pstich);
+    cout << endl;
+    PHANSO psthuong = Chia(ps1, ps2);
+    cout << "Thuong: ";
+    XuatPhanSo(psthuong);
+    cout << endl;
+    return 0;
+}
