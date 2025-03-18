@@ -2,116 +2,106 @@
 #include <vector>
 #include <algorithm>
 using namespace std;
-struct ChuyenBay
-{
+
+struct ChuyenBay {
     string MaCB;
     int ngay, thang, nam;
     int gio, phut;
     string NoiDi, NoiDen;
 };
-// ham kiem tra ma chuyen bay hop le
-bool KiemTraMaCB(const string &ma) 
-{
-    if (ma.length() > 5) return false;
+
+// Hàm kiểm tra mã chuyến bay hợp lệ
+bool KiemTraMaCB(const string &ma) {
+    if (ma.length() > 5) return false; // Mã tối đa 5 ký tự
     for (char c : ma) {
-        if (!isalnum(c)) return false;
+        if (!isalnum(c)) return false; // Chỉ chấp nhận ký tự chữ và số
     }
     return true;
 }
 
-// ham kiem tra ngay hop le
-bool KiemTraNgay(int ngay, int thang, int nam) 
-{
+// Hàm kiểm tra ngày hợp lệ
+bool KiemTraNgay(int ngay, int thang, int nam) {
     int ngayTrongThang[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-    if ((nam % 4 == 0 && nam % 100 != 0) || (nam % 400 == 0)) 
-    {
+
+    // Kiểm tra năm nhuận
+    if ((nam % 4 == 0 && nam % 100 != 0) || (nam % 400 == 0)) {
         ngayTrongThang[1] = 29;
     }
+
     if (thang < 1 || thang > 12) return false;
     if (ngay < 1 || ngay > ngayTrongThang[thang - 1]) return false;
     return true;
 }
 
-// ham kiem tra gio hop le
-bool KiemTraGio(int gio, int phut) 
-{
+// Hàm kiểm tra giờ hợp lệ
+bool KiemTraGio(int gio, int phut) {
     return gio >= 0 && gio < 24 && phut >= 0 && phut < 60;
 }
 
-// Ham kiem tra ten dia danh hop le
-bool KiemTraDiaDanh(const string &DiaDanh) 
-{
-    if (DiaDanh.length() > 20) return false;
+// Hàm kiểm tra địa danh hợp lệ
+bool KiemTraDiaDanh(const string &DiaDanh) {
+    if (DiaDanh.length() > 20) return false; // Độ dài tối đa 20 ký tự
     for (char c : DiaDanh) {
-        if (!(isalpha(c) || c == ' ')) return false;
+        if (!(isalpha(c) || c == ' ')) return false; // Chỉ chứa chữ cái và khoảng trắng
     }
     return true;
 }
 
-// ham nhap thong tin chuyen bay
-void NhapChuyenBay(ChuyenBay &cb) 
-{
-    do 
-    {
+// Hàm nhập thông tin chuyến bay
+void NhapChuyenBay(ChuyenBay &cb) {
+    do {
         cout << "Nhap ma chuyen bay: ";
         cin >> cb.MaCB;
-        if (!KiemTraMaCB(cb.MaCB)) 
-        {
-            cout << "Ma chuyen bay khong hop le! Toi da 5 ky tu, khong co khoang trang hoac ky tu dac biet.\n";
+        if (!KiemTraMaCB(cb.MaCB)) {
+            cout << "Ma chuyen bay khong hop le! Toi da 5 ky tu, khong chua ky tu dac biet.\n";
         }
     } while (!KiemTraMaCB(cb.MaCB));
 
     do {
         cout << "Nhap ngay bay (dd mm yyyy): ";
         cin >> cb.ngay >> cb.thang >> cb.nam;
-        if (!KiemTraNgay(cb.ngay, cb.thang, cb.nam)) 
-        {
+        if (!KiemTraNgay(cb.ngay, cb.thang, cb.nam)) {
             cout << "Ngay bay khong hop le! Vui long nhap lai.\n";
         }
     } while (!KiemTraNgay(cb.ngay, cb.thang, cb.nam));
 
-    do 
-    {
+    do {
         cout << "Nhap gio bay (hh mm): ";
         cin >> cb.gio >> cb.phut;
-        if (!KiemTraGio(cb.gio, cb.phut)) 
-        {
+        if (!KiemTraGio(cb.gio, cb.phut)) {
             cout << "Gio bay khong hop le! Gio tu 00:00 den 23:59.\n";
         }
     } while (!KiemTraGio(cb.gio, cb.phut));
 
     cin.ignore();
 
-    do 
-    {
+    do {
         cout << "Nhap noi di: ";
         getline(cin, cb.NoiDi);
-        if (!KiemTraDiaDanh(cb.NoiDi))
-        {
-            cout << "Noi di khong hop le! Toi da 20 ky tu, khong chua so hoac ky tu dac biet.\n";
+        if (!KiemTraDiaDanh(cb.NoiDi)) {
+            cout << "Noi di khong hop le! Toi da 20 ky tu, chi duoc chua chu cai va khoang trang.\n";
         }
     } while (!KiemTraDiaDanh(cb.NoiDi));
 
-    do 
-    {
+    do {
         cout << "Nhap noi den: ";
         getline(cin, cb.NoiDen);
-        if (!KiemTraDiaDanh(cb.NoiDen)) 
-        {
-            cout << "Noi den khong hop le! Toi da 20 ky tu, khong chua so hoac ky tu dac biet.\n";
+        if (!KiemTraDiaDanh(cb.NoiDen)) {
+            cout << "Noi den khong hop le! Toi da 20 ky tu, chi duoc chua chu cai va khoang trang.\n";
         }
     } while (!KiemTraDiaDanh(cb.NoiDen));
 }
-void XuatChuyenBay(const ChuyenBay &cb) // ham xuat thong tin chuyen bay
-{
+
+// Hàm xuất thông tin chuyến bay
+void XuatChuyenBay(const ChuyenBay &cb) {
     cout << cb.MaCB << " | " << cb.ngay << "/" << cb.thang << "/" << cb.nam
          << " | " << cb.gio << ":" << (cb.phut < 10 ? "0" : "") << cb.phut
          << " | " << cb.NoiDi << " -> " << cb.NoiDen << endl;
 }
-void SapXepChuyenBay(vector<ChuyenBay> &ds) // ham sap xep chuyen bay theo ngay gio khoi hanh
-{
-    sort(ds.begin(), ds.end(), [](const ChuyenBay &a, const ChuyenBay &b)
-    {
+
+// Hàm sắp xếp chuyến bay theo ngày giờ khởi hành
+void SapXepChuyenBay(vector<ChuyenBay> &ds) {
+    sort(ds.begin(), ds.end(), [](const ChuyenBay &a, const ChuyenBay &b) {
         if (a.nam != b.nam) return a.nam < b.nam;
         if (a.thang != b.thang) return a.thang < b.thang;
         if (a.ngay != b.ngay) return a.ngay < b.ngay;
@@ -119,12 +109,11 @@ void SapXepChuyenBay(vector<ChuyenBay> &ds) // ham sap xep chuyen bay theo ngay 
         return a.phut < b.phut;
     });
 }
-bool TimKiemTheoMa(const vector<ChuyenBay> &ds, const string &MaCB) // ham tim kiem chuyen bay theo ma chuyen bay
-{
-    for (const auto &cb : ds)
-    {
-        if (cb.MaCB == MaCB)
-        {
+
+// Hàm tìm kiếm chuyến bay theo mã
+bool TimKiemTheoMa(const vector<ChuyenBay> &ds, const string &MaCB) {
+    for (const auto &cb : ds) {
+        if (cb.MaCB == MaCB) {
             cout << "Chuyen bay " << MaCB << " ton tai.\n";
             return true;
         }
@@ -132,51 +121,50 @@ bool TimKiemTheoMa(const vector<ChuyenBay> &ds, const string &MaCB) // ham tim k
     cout << "Khong tim thay chuyen bay voi ma " << MaCB << ".\n";
     return false;
 }
-void LietKeChuyenBayTheoNgay(const vector<ChuyenBay> &ds, const string &NoiDi, int ngay, int thang, int nam) // ham liet ke chuyen bay tu mot noi va mot ngay cu the
-{
+
+// Hàm liệt kê chuyến bay theo nơi đi và ngày bay
+void LietKeChuyenBayTheoNgay(const vector<ChuyenBay> &ds, const string &NoiDi, int ngay, int thang, int nam) {
     cout << "\nCac chuyen bay khoi hanh tu " << NoiDi << " vao ngay " << ngay << "/" << thang << "/" << nam << ":\n";
     bool TimThay = false;
-    for (const auto &cb : ds)
-    {
-        if (cb.NoiDi == NoiDi && cb.ngay == ngay && cb.thang == thang && cb.nam == nam)
-        {
+    for (const auto &cb : ds) {
+        if (cb.NoiDi == NoiDi && cb.ngay == ngay && cb.thang == thang && cb.nam == nam) {
             XuatChuyenBay(cb);
             TimThay = true;
         }
     }
     if (!TimThay) cout << "Khong co chuyen bay nao phu hop.\n";
 }
-int DemChuyenBay(const vector<ChuyenBay> &ds, const string &NoiDi, const string &NoiDen) // ham dem chuyen bay tu mot noi den mot noi khac
-{
+
+// Hàm đếm số chuyến bay từ một nơi đến nơi khác
+int DemChuyenBay(const vector<ChuyenBay> &ds, const string &NoiDi, const string &NoiDen) {
     int count = 0;
     for (const auto &cb : ds) {
-        if (cb.NoiDi == NoiDi && cb.NoiDen == NoiDen)
-        {
+        if (cb.NoiDi == NoiDi && cb.NoiDen == NoiDen) {
             count++;
         }
     }
     cout << "\nSo chuyen bay tu " << NoiDi << " den " << NoiDen << ": " << count << endl;
     return count;
 }
-void NhapDanhSach(vector<ChuyenBay> &ds) // ham nhap danh sach chuyen bay
-{
+
+// Hàm nhập danh sách chuyến bay
+void NhapDanhSach(vector<ChuyenBay> &ds) {
     int n;
     cout << "Nhap so luong chuyen bay: ";
     cin >> n;
     cin.ignore();
-    for (int i = 0; i < n; i++)
-    {
+    for (int i = 0; i < n; i++) {
         cout << "\nNhap thong tin chuyen bay thu " << i + 1 << ":\n";
         ChuyenBay cb;
         NhapChuyenBay(cb);
         ds.push_back(cb);
     }
 }
-void XuatDanhSach(const vector<ChuyenBay> &ds) // ham xuat danh sach chuyen bay
-{
+
+// Hàm xuất danh sách chuyến bay
+void XuatDanhSach(const vector<ChuyenBay> &ds) {
     cout << "\nDanh sach chuyen bay:\n";
-    for (const auto &cb : ds)
-    {
+    for (const auto &cb : ds) {
         XuatChuyenBay(cb);
     }
 }
@@ -186,10 +174,12 @@ int main() {
     NhapDanhSach(DanhSach);
     SapXepChuyenBay(DanhSach);
     XuatDanhSach(DanhSach);
+
     string MaCB;
     cout << "\nNhap ma chuyen bay can kiem tra: ";
     cin >> MaCB;
     TimKiemTheoMa(DanhSach, MaCB);
+
     string NoiDi;
     int ngay, thang, nam;
     cout << "\nNhap noi di can tim: ";
@@ -198,13 +188,12 @@ int main() {
     cout << "Nhap ngay thang nam khoi hanh (dd mm yyyy): ";
     cin >> ngay >> thang >> nam;
     LietKeChuyenBayTheoNgay(DanhSach, NoiDi, ngay, thang, nam);
+
     string NoiDen;
-    cout << "\nNhap noi di va noi den can dem so chuyen bay:\n";
+    cout << "\nNhap noi den: ";
     cin.ignore();
-    cout << "Noi di: ";
-    getline(cin, NoiDi);
-    cout << "Noi den: ";
     getline(cin, NoiDen);
     DemChuyenBay(DanhSach, NoiDi, NoiDen);
+
     return 0;
 }
