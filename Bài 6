@@ -1,53 +1,76 @@
 #include <iostream>
 #include <vector>
 using namespace std;
-bool KiemTraDayCon(const vector<int>& A, const vector<int>& B, int vitribatdau) 
-// ham kiem tra day A co phai day con cua B khong                                                                           
-{
-    for (int i = 0; i < A.size(); i++)
-    {
-        if (vitribatdau + i >= B.size() || A[i] != B[vitribatdau + i]) 
-        {                                                              
+
+/**
+ * Hàm kiểm tra xem dãy A có xuất hiện tại vị trí `vitribatdau` trong dãy B hay không.
+ * @param A Dãy con cần kiểm tra.
+ * @param B Dãy chính chứa A (nếu có).
+ * @param vitribatdau Vị trí bắt đầu trong B để kiểm tra A.
+ * @return true nếu A xuất hiện tại vị trí đó trong B, false nếu không.
+ */
+bool KiemTraDayCon(const vector<int>& A, const vector<int>& B, int vitribatdau) {
+    for (int i = 0; i < A.size(); i++) {
+        // Nếu vị trí kiểm tra vượt quá phạm vi của B hoặc phần tử không khớp, trả về false
+        if (vitribatdau + i >= B.size() || A[i] != B[vitribatdau + i]) {
             return false;
         }
     }
-    return true;
+    return true; // Trả về true nếu toàn bộ dãy A xuất hiện trong B tại vị trí `vitribatdau`
 }
-vector<int> DemSoLanXuatHien(const vector<int>& A, const vector<int>& B)
-// ham dem so lan A xuat hien trong B
-{
-    vector<int> ViTriXuatHien;
-    if (A.empty() || B.empty()) return ViTriXuatHien;
-    if (A.size() > B.size()) return ViTriXuatHien;
-    for (int i = 0; i <= B.size() - A.size(); i++)
-    {
-        if (KiemTraDayCon(A, B, i))
-        {
-            ViTriXuatHien.push_back(i);
+
+/**
+ * Hàm đếm số lần dãy A xuất hiện trong dãy B và lưu vị trí bắt đầu của từng lần xuất hiện.
+ * @param A Dãy con cần tìm trong B.
+ * @param B Dãy chính.
+ * @return Vector chứa các vị trí bắt đầu của A trong B.
+ */
+vector<int> DemSoLanXuatHien(const vector<int>& A, const vector<int>& B) {
+    vector<int> ViTriXuatHien; // Lưu danh sách các vị trí mà A xuất hiện trong B
+
+    // Nếu một trong hai dãy rỗng hoặc A dài hơn B thì không thể xuất hiện
+    if (A.empty() || B.empty() || A.size() > B.size()) return ViTriXuatHien;
+
+    // Duyệt qua từng vị trí trong B để kiểm tra xem A có xuất hiện tại đó không
+    for (int i = 0; i <= B.size() - A.size(); i++) {
+        if (KiemTraDayCon(A, B, i)) {
+            ViTriXuatHien.push_back(i); // Lưu lại vị trí tìm thấy
         }
     }
-    return ViTriXuatHien;
+    return ViTriXuatHien; // Trả về danh sách các vị trí xuất hiện của A trong B
 }
-int main()
-{
+
+int main() {
     int SoPhanTuA, SoPhanTuB;
+
+    // Nhập số phần tử của hai dãy
     cout << "Nhap so phan tu cua mang A va B: ";
     cin >> SoPhanTuA >> SoPhanTuB;
+
     vector<int> A(SoPhanTuA), B(SoPhanTuB);
+
+    // Nhập dãy A
     cout << "Nhap mang A: ";
     for (int i = 0; i < SoPhanTuA; i++) cin >> A[i];
+
+    // Nhập dãy B
     cout << "Nhap mang B: ";
     for (int i = 0; i < SoPhanTuB; i++) cin >> B[i];
+
+    // Tìm số lần xuất hiện của A trong B
     vector<int> KetQua = DemSoLanXuatHien(A, B);
+
+    // Xuất kết quả
     cout << "So lan mang A xuat hien trong B: " << KetQua.size() << endl;
-    if (!KetQua.empty())
-    {
+
+    if (!KetQua.empty()) {
         cout << "Vi tri bat dau cua cac lan xuat hien: ";
-        for (int ViTri : KetQua)
-        {
+        for (int ViTri : KetQua) {
             cout << ViTri << " ";
         }
         cout << endl;
     }
+
     return 0;
 }
+
