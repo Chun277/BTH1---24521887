@@ -1,13 +1,20 @@
 #include <iostream>
 using namespace std;
+
 struct PHANSO {
-    int ts, ms;
+    int ts, ms; // Tử số và mẫu số của phân số
 };
-int TimUSCLN(int a, int b) { // ham tim uoc so chung lon nhat
-    a = a < 0 ? -a : a;
-    b = b < 0 ? -b : b;
+
+/**
+ * Hàm tìm ước số chung lớn nhất (USCLN) của hai số nguyên
+ * Đầu vào: hai số nguyên a, b
+ * Đầu ra: USCLN của a và b
+ */
+int TimUSCLN(int a, int b) {
+    a = abs(a); // Chuyển a về giá trị dương
+    b = abs(b); // Chuyển b về giá trị dương
     if (a == 0 || b == 0)
-        return a + b;
+        return a + b; // Nếu một trong hai số bằng 0, USCLN là số còn lại
     while (a != b) {
         if (a > b)
             a -= b;
@@ -16,102 +23,130 @@ int TimUSCLN(int a, int b) { // ham tim uoc so chung lon nhat
     }
     return b;
 }
-void RutGon(PHANSO &ps) // ham rut gon phan so
-{
+
+/**
+ * Hàm rút gọn phân số bằng cách chia cả tử số và mẫu số cho USCLN
+ * Đầu vào: một phân số
+ * Đầu ra: phân số sau khi rút gọn
+ */
+void RutGon(PHANSO &ps) {
     int USCLN = TimUSCLN(ps.ts, ps.ms);
     if (USCLN > 0) {
         ps.ts /= USCLN;
         ps.ms /= USCLN;
     }
+    // Đảm bảo mẫu số luôn dương
     if (ps.ms < 0) {
         ps.ts = -ps.ts;
         ps.ms = -ps.ms;
     }
 }
-void NhapPhanSo(PHANSO &ps) // ham nhap phan so
-{
+
+/**
+ * Hàm nhập thông tin cho một phân số từ bàn phím
+ * Đầu vào: phân số cần nhập
+ * Đầu ra: giá trị của phân số được nhập
+ */
+void NhapPhanSo(PHANSO &ps) {
     cout << "Nhap tu so: ";
     cin >> ps.ts;
     do {
-        cout << "Nhap mau so: ";
+        cout << "Nhap mau so (khac 0): ";
         cin >> ps.ms;
-    } while (ps.ms == 0);
+    } while (ps.ms == 0); // Kiểm tra tránh nhập mẫu số bằng 0
 }
-void XuatPhanSo(PHANSO ps) // ham xuat  phan so
-{
-    RutGon(ps);
-    if (ps.ms < 0)
-    {
-        cout << -ps.ts << "/" << -ps.ms;
+
+/**
+ * Hàm xuất phân số ra màn hình theo dạng tối giản
+ * Đầu vào: một phân số đã rút gọn
+ * Đầu ra: hiển thị phân số dưới dạng tử/mẫu
+ */
+void XuatPhanSo(PHANSO ps) {
+    RutGon(ps); // Đảm bảo phân số được rút gọn trước khi xuất
+    if (ps.ms == 1) {
+        cout << ps.ts; // Nếu mẫu số là 1, chỉ in tử số
     }
-    else if (ps.ms == -1)
-    {
-        cout << -ps.ts;
+    else if (ps.ms == -1) {
+        cout << -ps.ts; // Nếu mẫu số là -1, chỉ in tử số âm
     }
-    else if (ps.ms == 0)
-    {
-        cout << "Khong Xac Dinh";
+    else if (ps.ms == 0) {
+        cout << "Khong Xac Dinh"; // Tránh lỗi chia cho 0 (trường hợp không hợp lệ)
     }
-    else if (ps.ms == 1)
-    {
-        cout << ps.ts;
-    }
-    else
-    {
-        cout << ps.ts << "/" << ps.ms;
+    else {
+        cout << ps.ts << "/" << ps.ms; // In phân số dạng tử/mẫu
     }
 }
 
-PHANSO Cong(PHANSO ps1, PHANSO ps2)// ham tinh tong 2 phan so
-{
+/**
+ * Hàm cộng hai phân số
+ * Đầu vào: hai phân số ps1 và ps2
+ * Đầu ra: phân số tổng của hai phân số
+ */
+PHANSO Cong(PHANSO ps1, PHANSO ps2) {
     PHANSO pstong;
     pstong.ts = ps1.ts * ps2.ms + ps1.ms * ps2.ts;
     pstong.ms = ps1.ms * ps2.ms;
     return pstong;
 }
-PHANSO Tru(PHANSO ps1, PHANSO ps2)//ham tinh hieu 2 phan so
-{
+
+/**
+ * Hàm trừ hai phân số
+ * Đầu vào: hai phân số ps1 và ps2
+ * Đầu ra: phân số hiệu của hai phân số
+ */
+PHANSO Tru(PHANSO ps1, PHANSO ps2) {
     PHANSO pshieu;
     pshieu.ts = ps1.ts * ps2.ms - ps1.ms * ps2.ts;
     pshieu.ms = ps1.ms * ps2.ms;
     return pshieu;
 }
-PHANSO Nhan(PHANSO ps1, PHANSO ps2)// ham tinh tich 2 phan so
-{
+
+/**
+ * Hàm nhân hai phân số
+ * Đầu vào: hai phân số ps1 và ps2
+ * Đầu ra: phân số tích của hai phân số
+ */
+PHANSO Nhan(PHANSO ps1, PHANSO ps2) {
     PHANSO pstich;
     pstich.ts = ps1.ts * ps2.ts;
     pstich.ms = ps1.ms * ps2.ms;
     return pstich;
 }
-PHANSO Chia(PHANSO ps1, PHANSO ps2)// ham tinh thuong 2 phan so
-{
+
+/**
+ * Hàm chia hai phân số
+ * Đầu vào: hai phân số ps1 và ps2
+ * Đầu ra: phân số thương của hai phân số
+ */
+PHANSO Chia(PHANSO ps1, PHANSO ps2) {
     PHANSO psthuong;
     psthuong.ts = ps1.ts * ps2.ms;
     psthuong.ms = ps1.ms * ps2.ts;
     return psthuong;
 }
-int main()
-{
+
+/**
+ * Hàm chính của chương trình, thực hiện nhập, rút gọn, tính toán và xuất kết quả các phép toán trên phân số
+ */
+int main() {
     PHANSO ps1, ps2;
     cout << "Nhap phan so 1: " << endl;
     NhapPhanSo(ps1);
     cout << "Nhap phan so 2: " << endl;
     NhapPhanSo(ps2);
+
+    // Thực hiện các phép toán
     PHANSO pstong = Cong(ps1, ps2);
-    cout << "Tong: ";
-    XuatPhanSo(pstong);
-    cout << endl;
     PHANSO pshieu = Tru(ps1, ps2);
-    cout << "Hieu: ";
-    XuatPhanSo(pshieu);
-    cout << endl;
     PHANSO pstich = Nhan(ps1, ps2);
-    cout << "Tich: ";
-    XuatPhanSo(pstich);
-    cout << endl;
     PHANSO psthuong = Chia(ps1, ps2);
-    cout << "Thuong: ";
-    XuatPhanSo(psthuong);
-    cout << endl;
+
+    // Xuất kết quả
+    cout << "Tong: "; XuatPhanSo(pstong); cout << endl;
+    cout << "Hieu: "; XuatPhanSo(pshieu); cout << endl;
+    cout << "Tich: "; XuatPhanSo(pstich); cout << endl;
+    cout << "Thuong: "; XuatPhanSo(psthuong); cout << endl;
+
     return 0;
 }
+
